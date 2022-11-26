@@ -1,9 +1,6 @@
 package com.example.demosecucume.Entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,6 +13,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 //paramettre sans arguments
+@ToString
 @NoArgsConstructor
 public class AppRole {
     @Id//permet de prendre id_user comme id de cette table

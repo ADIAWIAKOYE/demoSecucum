@@ -9,21 +9,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
 @Slf4j
-public class CustomUserDetailsService{ //implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
-  /*  private AppUserRepo appUserRepo;
+    private AppUserRepo appUserRepo;
 
     public CustomUserDetailsService(AppUserRepo appUserRepo) {
         this.appUserRepo = appUserRepo;
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username.trim().isEmpty()) {
             throw new UsernameNotFoundException("username vide");
@@ -49,5 +51,5 @@ public class CustomUserDetailsService{ //implements UserDetailsService {
         ////////////////////////
         // L'interface UserDetails  représente un objet
         // utilisateur authentifié et Spring Security fournit une implémentation prête à l'emploi de org.......
-    }*/
+    }
 }

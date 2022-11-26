@@ -6,6 +6,7 @@ import com.example.demosecucume.Repository.AppRoleRepo;
 import com.example.demosecucume.service.AccountService;
 import lombok.Data;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ public class AccountRestController {
 
     @PostMapping("/saveusers")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public AppUser saveUser(@RequestBody AppUser appUser){
+    public AppUser saveUser(Authentication authentication, @RequestBody AppUser appUser){
 
         return accountService.addUser(appUser);
     }

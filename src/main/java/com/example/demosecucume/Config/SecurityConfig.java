@@ -1,8 +1,7 @@
 package com.example.demosecucume.Config;
 
+import com.example.demosecucume.Entities.AppUser;
 import com.example.demosecucume.service.AccountService;
-import com.example.demosecucume.service.CustomUserDetailsService;
-import com.example.demosecucume.service.CustonAuthentificationFilter;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -11,7 +10,6 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -24,35 +22,41 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 //@NoArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig{ //extends WebSecurityConfigurerAdapter {
 
     private RsakeysConfig rsakeysConfig;
     private PasswordEncoder passwordEncoder;
-   // private AccountService accountService;
-    //private UserDetailsService userDetailsService;
+   private AccountService accountService;
+    private UserDetailsService userDetailsService;
   /// private CustomUserDetailsService
 
-    public SecurityConfig(RsakeysConfig rsakeysConfig, PasswordEncoder passwordEncoder){
+    public SecurityConfig(RsakeysConfig rsakeysConfig, PasswordEncoder passwordEncoder, AccountService accountService, UserDetailsService userDetailsService){
         this.rsakeysConfig = rsakeysConfig;
         this.passwordEncoder = passwordEncoder;
+        this.accountService = accountService;
 
 
+        this.userDetailsService = userDetailsService;
     }
 ///////////////////////////////////////////////////
 
@@ -100,24 +104,25 @@ public class SecurityConfig {
 
 /////////////////////////////////////////////////////////////////////
     //pour une authentification personnaliser
-    //@Bean
+   // @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService){
+    public AuthenticationManager authenticationManager(){//UserDetailsService userDetailsService){
       var authProvider =  new DaoAuthenticationProvider();
-      authProvider.setPasswordEncoder(passwordEncoder);
+          authProvider.setPasswordEncoder(passwordEncoder);
      authProvider.setUserDetailsService(userDetailsService);
+        // authProvider.setPasswordEncoder(passwordEncoder);
       return new ProviderManager(authProvider);
     }
 
 
 
-/* @Bean
+// @Bean
 
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+  /*  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -135,7 +140,23 @@ public class SecurityConfig {
 
 
 
-   @Bean
+   /* @Bean
+    public PasswordEncoder passwordEncoder(){
+
+        return new BCryptPasswordEncoder();
+    }*/
+
+   /* @Bean
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return authenticationProvider;
+    }*/
+
+
+   /*@Bean
     public UserDetailsService inMemoryUserDetailsManager(){
         return new InMemoryUserDetailsManager(
                 User.withUsername("user1").password(passwordEncoder.encode("1234")).authorities("USER").build(),
@@ -144,6 +165,23 @@ public class SecurityConfig {
                 User.withUsername("admin").password(passwordEncoder.encode("1234")).authorities("ADMIN").build()
 
         );
+    }*/
+
+   // @Bean
+    public  UserDetailsService userDetailsService(AuthenticationManagerBuilder auth) throws Exception {
+         auth.userDetailsService(new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                AppUser appUser=accountService.trouverUserParSonNom(username);
+                Collection<GrantedAuthority> authorities=new ArrayList<>();
+                appUser.getAppRoles().forEach(appRole -> {
+                    authorities.add(new SimpleGrantedAuthority(appRole.getNomrole()));
+                });
+                return new User(appUser.getNom(),appUser.getPassword(),authorities);
+            }
+        });
+
+        return null;
     }
 
 
@@ -155,13 +193,16 @@ public class SecurityConfig {
                 .csrf(csrf->csrf.disable())
                 .authorizeRequests(auth->auth.antMatchers("/token/**").permitAll())
                 // Toutes les requetes nessecite une authentification
-
+//                .authenticationProvider(authenticationProvider())
                 .authorizeRequests(auth->auth.anyRequest().authenticated())
                 .sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults()).build();
 
-                .build();
+
+
+        /*http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);*/
+
     }
 
     @Bean

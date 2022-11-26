@@ -1,10 +1,7 @@
 package com.example.demosecucume.Entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,6 +17,7 @@ import java.util.Collection;
 @AllArgsConstructor
 //paramettre sans arguments
 @NoArgsConstructor
+@ToString
 public class AppUser {
 
     @Id//permet de prendre id_user comme id de cette table

@@ -1,6 +1,7 @@
 package com.example.demosecucume.Web;
 
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,12 +25,18 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 
 public class AuthController {
+
+    @Autowired
     private JwtEncoder jwtEncoder;
 
+    @Autowired
     private JwtDecoder jwtDecoder;
 
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
     private UserDetailsService userDetailsService;
 
 
@@ -42,7 +49,7 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<Map<String, String>> jwtToken(
+    public ResponseEntity<Map< String, String>> jwtToken(
             String grantype, String username, String password, boolean withRefreshToken, String refreshToken){
 
         String subjecte = null;
@@ -51,7 +58,8 @@ public class AuthController {
 
 
         if (grantype.equals("password")){
-            Authentication   authentication = authenticationManager.authenticate(
+            System.out.println(username +"##########################" + password);
+            Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
             );
              subjecte=authentication.getName();
