@@ -8,8 +8,12 @@ import java.util.List;
 public interface AccountService {
 
     AppUser addUser(AppUser appUser);
+
     AppRole addRole(AppRole appRole);
+
     void addRoleToUser(String nom, String nomrole);
+
     AppUser trouverUserParSonNom(String nom);
+
     List<AppUser> afficherUser();
 }

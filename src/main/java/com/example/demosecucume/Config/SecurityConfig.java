@@ -10,6 +10,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -192,6 +193,9 @@ public class SecurityConfig{ //extends WebSecurityConfigurerAdapter {
         return http
                 .csrf(csrf->csrf.disable())
                 .authorizeRequests(auth->auth.antMatchers("/token/**").permitAll())
+                .authorizeRequests(auth->auth.antMatchers(HttpMethod.GET,"/colaborateur/afficheruser/").hasAnyAuthority("USER","ADMIN"))
+                .authorizeRequests(auth->auth.antMatchers(HttpMethod.POST,"/colaborateur/saveusers/").hasAnyAuthority("ADMIN"))
+                .authorizeRequests(auth->auth.antMatchers(HttpMethod.POST,"/colaborateur/saverole/").hasAnyAuthority("ADMIN"))
                 // Toutes les requetes nessecite une authentification
 //                .authenticationProvider(authenticationProvider())
                 .authorizeRequests(auth->auth.anyRequest().authenticated())

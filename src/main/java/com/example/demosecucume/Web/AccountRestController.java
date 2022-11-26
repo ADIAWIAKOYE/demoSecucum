@@ -7,14 +7,12 @@ import com.example.demosecucume.service.AccountService;
 import lombok.Data;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/colaborateur")
 public class AccountRestController {
 
     private AccountService accountService;
@@ -22,7 +20,7 @@ public class AccountRestController {
     public AccountRestController(AccountService accountService) {
         this.accountService = accountService;
     }
-    @GetMapping("/user")
+    @GetMapping("/afficheruser")
     @PreAuthorize("hasAuthority('SCOPE_USER') or hasAuthority('SCOPE_ADMIN')")
     public List<AppUser> appUsers(){
 
@@ -36,14 +34,14 @@ public class AccountRestController {
         return accountService.addUser(appUser);
     }
 
-   /* @PostMapping("/saveusers")
+    @PostMapping("/saverole")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public AppRole saveRole(@RequestBody AppRole appRole){
+    public AppRole saveRole(Authentication authentication, @RequestBody AppRole appRole){
 
         return accountService.addRole(appRole);
     }
 
-    @PostMapping("/addRoleToUser")
+  /*  @PostMapping("/addRoleToUser")
     public void addRoleToUser(@RequestBody RoleUserForm roleUserForm){
 
          accountService.addRoleToUser(roleUserForm.getNom(), roleUserForm.getNomrole());
