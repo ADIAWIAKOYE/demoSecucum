@@ -41,15 +41,16 @@ public class AccountRestController {
         return accountService.addRole(appRole);
     }
 
-  /*  @PostMapping("/addRoleToUser")
-    public void addRoleToUser(@RequestBody RoleUserForm roleUserForm){
+    @PostMapping("/addRoleToUser")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public void addRoleToUser(Authentication authentication, @RequestBody RoleUserForm roleUserForm){
 
          accountService.addRoleToUser(roleUserForm.getNom(), roleUserForm.getNomrole());
-    }*/
+    }
 }
 
-/*@Data
+@Data
 class RoleUserForm{
     private String nom;
     private String nomrole;
-}*/
+}

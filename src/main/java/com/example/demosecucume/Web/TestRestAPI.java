@@ -26,6 +26,7 @@ public class TestRestAPI {
     @PostMapping("/saveData")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public Map<String,String> saveData(String data){
+
         return Map.of("dataSaved",data);
     }
 }

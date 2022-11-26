@@ -32,7 +32,7 @@ public class DemoSecuCumeApplication {
 
     @Bean
     CommandLineRunner start(AccountService accountService, AppUserRepo appUserRepo){
-       // if (appUserRepo.findAll().size()==0){
+        if (appUserRepo.findAll().size()==0){
         return args -> {
             accountService.addRole(new AppRole(null,"USER"));
             accountService.addRole(new AppRole(null,"ADMIN"));
@@ -51,8 +51,8 @@ public class DemoSecuCumeApplication {
             accountService.addRoleToUser("admin1","ADMIN");
             accountService.addRoleToUser("user3","ADMIN");
         };
-   // }else {
-         //   return null;
-     //   }
+   }else {
+           return null;
+       }
 }
 }

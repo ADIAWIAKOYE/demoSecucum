@@ -201,11 +201,10 @@ public class SecurityConfig{ //extends WebSecurityConfigurerAdapter {
                 .authorizeRequests(auth->auth.anyRequest().authenticated())
                 .sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                .httpBasic(Customizer.withDefaults()).build();
+                .httpBasic(Customizer.withDefaults())
+                .build();
 
 
-
-        /*http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);*/
 
     }
 
