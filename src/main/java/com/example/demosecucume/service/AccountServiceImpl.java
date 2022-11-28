@@ -59,4 +59,23 @@ private PasswordEncoder passwordEncoder;
 
         return appUserRepo.findAll();
     }
+
+    @Override
+    public AppUser update(AppUser appUser, Long id) {
+
+        return appUserRepo.findById(id)
+                .map(appUser1 -> {
+                    appUser1.setNom(appUser.getNom());
+                    appUser1.setPassword(appUser.getPassword());
+                    return appUserRepo.save(appUser1);
+                }).orElseThrow(() -> new RuntimeException("User non trouve !"));
+    }
+
+    @Override
+    public String delete(Long id) {
+
+        appUserRepo.deleteById(id);
+
+        return "User supprimer avec succes";
+    }
 }

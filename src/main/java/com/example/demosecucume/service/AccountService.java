@@ -16,4 +16,8 @@ public interface AccountService {
     AppUser trouverUserParSonNom(String nom);
 
     List<AppUser> afficherUser();
+
+    AppUser update(AppUser appUser, Long id);
+
+    String delete(Long id);
 }

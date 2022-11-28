@@ -185,10 +185,7 @@ public class SecurityConfig{ //extends WebSecurityConfigurerAdapter {
         return null;
     }
 
-
-
-    @Bean
-
+  /*  @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf->csrf.disable())
@@ -199,14 +196,62 @@ public class SecurityConfig{ //extends WebSecurityConfigurerAdapter {
                 // Toutes les requetes nessecite une authentification
 //                .authenticationProvider(authenticationProvider())
                 .authorizeRequests(auth->auth.anyRequest().authenticated())
+
                 .sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .httpBasic(Customizer.withDefaults())
+
                 .build();
+    }*/
 
 
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity)throws  Exception{
 
+        return httpSecurity
+                .csrf(csrf->csrf.disable())
+                //Il donner l'autorisation au user à s'authentifier à travers ce url
+                .authorizeRequests(auth->auth.antMatchers("/token/**").permitAll())
+                .authorizeRequests(auth-> {
+                            try {
+                                auth.anyRequest().authenticated()
+                                        .and()
+                                        .oauth2Login();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                )
+
+
+                //.sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .formLogin().and()
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
+
+
+
+
+
+    ////////////////////////////////////////////////////////////
+
+   /* @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .antMatchers("/dataTest").hasRole("ADMIN")
+                .antMatchers("/dataTest").hasRole("USER")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .and()
+                .oauth2Login();
+    }*/
+    ////////////////////////////////////////////
+
+
 
     @Bean
      JwtEncoder jwtEncoder(){

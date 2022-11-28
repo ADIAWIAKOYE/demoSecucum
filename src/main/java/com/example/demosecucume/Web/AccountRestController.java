@@ -7,6 +7,11 @@ import com.example.demosecucume.service.AccountService;
 import lombok.Data;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/colaborateur")
 public class AccountRestController {
+
 
     private AccountService accountService;
 
@@ -47,6 +53,8 @@ public class AccountRestController {
 
          accountService.addRoleToUser(roleUserForm.getNom(), roleUserForm.getNomrole());
     }
+
+
 }
 
 @Data
