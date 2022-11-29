@@ -1,0 +1,7 @@
+2022-11-29 09:33:38.493  WARN 10556 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11h46m7s446ms674µs).
+2022-11-29 11:16:07.850  INFO 10556 --- [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-11-29 11:16:07.853  INFO 10556 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-11-29 11:16:07.886  INFO 10556 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 33 ms
+2022-11-29 11:16:08.271  INFO 10556 --- [http-nio-8080-exec-2] c.e.d.service.CustomUserDetailsService   : Utilisateur  trouvé
+2022-11-29 11:16:50.776  INFO 10556 --- [http-nio-8080-exec-3] c.e.d.service.CustomUserDetailsService   : Utilisateur  trouvé
+2022-11-29 11:22:38.297  INFO 10556 --- [http-nio-8080-exec-5] c.e.d.service.CustomUserDetailsService   : Utilisateur  trouvé
